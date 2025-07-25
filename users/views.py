@@ -41,6 +41,7 @@ def delete_user(request, username):
         return JsonResponse({"message": f"User {username} deleted"}, status=200)
     return JsonResponse({"error": "Invalid method"}, status=405)
 
+
 #write list users method
 @csrf_exempt
 def list_users(request):
