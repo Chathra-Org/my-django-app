@@ -47,6 +47,8 @@ jobs:
         if: failure()
         env:
           AWS_BEDROCK_AGENT_ID: ${{ secrets.AWS_BEDROCK_AGENT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           branch_name=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
           repo_url="https://github.com/${{ github.repository }}/tree/$branch_name"
