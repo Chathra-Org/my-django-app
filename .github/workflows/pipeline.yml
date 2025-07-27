@@ -59,8 +59,9 @@ jobs:
           intro_text="Given feature branch url is: $repo_url"
           prompt_string=$(cat .github/prompt.txt)
           pytest_output=$(cat test-results/pytest-results.txt)
-          intro_text="Given feature branch url is: $repo_url and short commit hash is: $(git rev-parse --short HEAD)"
-          prompt="$input_text $prompt_string $pytest_output"
+          short_commit_hash=$(git rev-parse --short HEAD)
+          intro_text="Given feature branch url is: $repo_url and short commit hash is: $short_commit_hash"
+          prompt="$intro_text $prompt_string $pytest_output"
           echo "$prompt"
           export PROMPT_TEXT="$prompt"
           python invoke_bedrock_agent.py
