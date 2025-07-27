@@ -28,6 +28,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install boto3
 
       - name: 🧪 Run pytest
         run: |
@@ -49,6 +50,7 @@ jobs:
           AWS_BEDROCK_AGENT_ID: ${{ secrets.AWS_BEDROCK_AGENT_ID }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
         run: |
           branch_name=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
           repo_url="https://github.com/${{ github.repository }}/tree/$branch_name"
@@ -59,8 +61,5 @@ jobs:
           intro_text="Given feature branch url is: $repo_url"
           prompt="$input_text $prompt_string $pytest_output"
           echo "$prompt"
-          response=$(aws bedrock-agent-runtime invoke-agent \
-            --agent-id "$AWS_BEDROCK_AGENT_ID" \
-            --input-text "$prompt" \
-            --region us-east-1)
-          echo "$response"
+          export PROMPT_TEXT="$prompt"
+          python invoke_bedrock_agent.py
