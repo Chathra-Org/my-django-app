@@ -45,6 +45,8 @@ jobs:
 
       - name: 💾 Save custom prompt variable
         if: failure()
+        env:
+          AWS_BEDROCK_AGENT_ID: ${{ secrets.AWS_BEDROCK_AGENT_ID }}
         run: |
           branch_name=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
           repo_url="https://github.com/${{ github.repository }}/tree/$branch_name"
@@ -55,6 +57,8 @@ jobs:
           intro_text="Given feature branch url is: $repo_url"
           prompt="$input_text $prompt_string $pytest_output"
           echo "$prompt"
-          response=$(aws bedrock-agent invoke-agent --agent-id "$AWS_BEDROCK_AGENT_ID" --input-text "$prompt" --region us-east-1)
-          echo $response
-          
+          response=$(aws bedrock-agent-runtime invoke-agent \
+            --agent-id "$AWS_BEDROCK_AGENT_ID" \
+            --input-text "$prompt" \
+            --region us-east-1)
+          echo "$response"
