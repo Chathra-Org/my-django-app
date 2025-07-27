@@ -1,7 +1,7 @@
 import os
 import boto3
 
-def invoke_bedrock_agent(agent_id, prompt, region):
+def invoke_bedrock_agent(agent_id, prompt, session_id, region):
     client = boto3.client('bedrock-agent-runtime', region_name=region)
     print(f"Invoking agent with ID: {agent_id}, session ID: {session_id}")
     response = client.invoke_agent(
