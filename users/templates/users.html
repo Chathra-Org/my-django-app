@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { background: #f8fafc; }
+        .user-card { box-shadow: 0 2px 8px rgba(0,0,0,0.07); border-radius: 8px; margin-bottom: 1rem; }
+        .api-section { background: #fff; border-radius: 8px; padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .api-title { color: #0d6efd; }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4 api-title">User Management API Demo</h1>
+    <div class="api-section mb-5">
+        <h3>API Endpoints</h3>
+        <ul>
+            <li><strong>GET /users/</strong> - List all users</li>
+            <li><strong>POST /users/</strong> - Add a new user</li>
+            <li><strong>GET /users/&lt;username&gt;/</strong> - Get user details</li>
+            <li><strong>PUT /users/&lt;username&gt;/</strong> - Update user</li>
+            <li><strong>DELETE /users/&lt;username&gt;/</strong> - Delete user</li>
+        </ul>
+    </div>
+    <div class="api-section mb-5">
+        <h3>Add User</h3>
+        <form id="addUserForm" class="row g-3">
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="username" placeholder="Username" required>
+            </div>
+            <div class="col-md-6">
+                <input type="email" class="form-control" id="email" placeholder="Email" required>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-success">Add User</button>
+            </div>
+        </form>
+        <div id="addUserMsg" class="mt-3"></div>
+    </div>
+    <div class="api-section mb-5">
+        <h3>Users List</h3>
+        <div id="usersList"></div>
+    </div>
+</div>
+<script>
+function fetchUsers() {
+    fetch('/users/')
+        .then(res => res.json())
+        .then(data => {
+            const usersDiv = document.getElementById('usersList');
+            usersDiv.innerHTML = '';
+            if (data.users && data.users.length > 0) {
+                data.users.forEach(user => {
+                    usersDiv.innerHTML += `
+                        <div class="user-card p-3 mb-2 bg-light">
+                            <strong>${user.username}</strong> <span class="text-muted">${user.email}</span>
+                            <button class="btn btn-sm btn-primary ms-2" onclick="editUser('${user.username}')">Edit</button>
+                            <button class="btn btn-sm btn-danger ms-2" onclick="deleteUser('${user.username}')">Delete</button>
+                        </div>
+                    `;
+                });
+            } else {
+                usersDiv.innerHTML = '<em>No users found.</em>';
+            }
+        });
+}
+
+document.getElementById('addUserForm').onsubmit = function(e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    fetch('/users/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email })
+    })
+    .then(res => res.json().then(data => ({ status: res.status, body: data })))
+    .then(result => {
+        if (result.status === 201) {
+            document.getElementById('addUserMsg').innerHTML = `<span class="text-success">${result.body.message}</span>`;
+            fetchUsers();
+        } else {
+            document.getElementById('addUserMsg').innerHTML = `<span class="text-danger">${result.body.error}</span>`;
+        }
+    });
+};
+
+function editUser(username) {
+    const newEmail = prompt('Enter new email for ' + username + ':');
+    if (newEmail) {
+        fetch(`/users/${username}/`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: newEmail })
+        })
+        .then(res => res.json().then(data => ({ status: res.status, body: data })))
+        .then(result => {
+            if (result.status === 200) {
+                alert(result.body.message);
+                fetchUsers();
+            } else {
+                alert(result.body.error);
+            }
+        });
+    }
+}
+
+function deleteUser(username) {
+    if (confirm('Delete user ' + username + '?')) {
+        fetch(`/users/${username}/`, { method: 'DELETE' })
+            .then(res => res.json().then(data => ({ status: res.status, body: data })))
+            .then(result => {
+                if (result.status === 200) {
+                    alert(result.body.message);
+                    fetchUsers();
+                } else {
+                    alert(result.body.error);
+                }
+            });
+    }
+}
+
+window.onload = fetchUsers;
+</script>
+</body>
+</html>

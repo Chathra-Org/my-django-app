@@ -17,10 +17,9 @@ Including another URLconf
 from django.urls import include, path
 from django.contrib import admin
 
-from users.views import add_user, list_users
 
 urlpatterns = [
-    #path('add-user/', add_user, name='add_user'),
-    #path('list-users/', list_users, name='list_users'),
-    path('', include('users.urls')),
+    path('admin/', admin.site.urls),
+    path('', include('home.urls')),
+    path('', include('registration.urls')),
 ]

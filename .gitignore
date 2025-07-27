@@ -1,0 +1,55 @@
+
+# Python virtual environments
+venv/
+my_django_app/venv/
+
+# Python bytecode and cache
+__pycache__/
+my_django_app/__pycache__/
+*.py[cod]
+my_django_app/*.py[cod]
+
+# Django migrations
+*/migrations/*.pyc
+*/migrations/__pycache__/
+*/migrations/*.py[cod]
+*/migrations/*.pyo
+
+# SQLite database
+*.sqlite3
+db.sqlite3
+
+# Environment and secrets
+.env
+*.env
+*.env.*
+secret.auto.tfvars
+
+# Editor/project files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Test and coverage
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+Testcoverage.txt
+
+# Build and dist
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Logs
+*.log
+
+# Zip and binary
+*.zip
+*.tar.gz
+*.bak
