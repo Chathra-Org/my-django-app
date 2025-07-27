@@ -6,13 +6,13 @@ from registration.models import Registration
 def test_registration_page_renders(client):
     response = client.get(reverse('register'))
     assert response.status_code == 200
-    assert b"Welcome to AWS Community Day 2025!" in response.content
+    assert b"Register" in response.content
 
 @pytest.mark.django_db
 def test_successful_registration(client):
     data = {'first_name': 'John', 'last_name': 'Doe', 'email': 'john@example.com'}
     response = client.post(reverse('register'), data)
-    assert response.status_code == 200
+    assert response.status_code == 302  # Redirect to success page
     assert Registration.objects.filter(email='john@example.com').exists()
     assert b"Registration successful" in response.content
 
@@ -25,6 +25,7 @@ def test_successful_registration(client):
 def test_registration_missing_fields(client, data):
     response = client.post(reverse('register'), data)
     assert response.status_code == 200
+    assert b"This field is required." in response.content
     assert Registration.objects.count() == 0
 
 @pytest.mark.django_db
@@ -32,6 +33,7 @@ def test_registration_invalid_email(client):
     data = {'first_name': 'John', 'last_name': 'Doe', 'email': 'not-an-email'}
     response = client.post(reverse('register'), data)
     assert response.status_code == 200
+    assert b"Enter a valid email address." in response.content
     assert Registration.objects.count() == 0
 
 @pytest.mark.django_db
@@ -40,6 +42,7 @@ def test_registration_duplicate_email(client):
     data = {'first_name': 'John', 'last_name': 'Doe', 'email': 'jane@example.com'}
     response = client.post(reverse('register'), data)
     assert response.status_code == 200
+    assert b"A user with this email address already exists." in response.content
     assert Registration.objects.count() == 1  # Only the first registration exists
 
 @pytest.mark.django_db
@@ -49,5 +52,3 @@ def test_registrations_list_page(client):
     assert response.status_code == 200
     assert b"Registered Users" in response.content
     assert b"jane@example.com" in response.content
-
-# CSRF token is automatically handled by Django test client, so explicit test is not needed
