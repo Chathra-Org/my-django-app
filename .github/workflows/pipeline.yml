@@ -31,4 +31,25 @@ jobs:
 
       - name: 🧪 Run pytest
         run: |
-          pytest --disable-warnings
+          mkdir -p test-results
+          pytest --disable-warnings | tee test-results/pytest-results.txt 
+      #if failed save command output to a variable
+
+      - name: 📊 Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: pytest-results
+          path: test-results/
+
+      - name: 💾 Save custom prompt variable
+        if: failure()
+        run: |
+          branch_name=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
+          repo_url="https://github.com/${{ github.repository }}/tree/$branch_name"
+          echo $repo_url
+          intro_text="Given feature branch url is: $repo_url"
+          prompt_string=$(cat .github/prompt.txt)
+          pytest_output=$(cat test-results/pytest-results.txt)
+          intro_text="Given feature branch url is: $repo_url"
+          echo "prompt=$input_text $prompt_string $pytest_output"
