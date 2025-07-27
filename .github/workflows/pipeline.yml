@@ -53,9 +53,8 @@ jobs:
           prompt_string=$(cat .github/prompt.txt)
           pytest_output=$(cat test-results/pytest-results.txt)
           intro_text="Given feature branch url is: $repo_url"
-          {
-            echo "prompt<<EOF"
-            echo "$input_text $prompt_string $pytest_output"
-            echo "EOF"
-          } >> $GITHUB_ENV
+          prompt="$input_text $prompt_string $pytest_output"
           echo "$prompt"
+          response=$(aws bedrock-agent invoke-agent --agent-id "$AWS_BEDROCK_AGENT_ID" --input-text "$prompt" --region us-east-1)
+          echo $response
+          
