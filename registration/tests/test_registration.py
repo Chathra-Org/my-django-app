@@ -52,3 +52,19 @@ def test_registrations_list_page(client):
     assert response.status_code == 200
     assert b"Registered Users" in response.content
     assert b"jane@example.com" in response.content
+
+@pytest.mark.django_db
+def test_registration_invalid_email_format(client):
+    data = {'first_name': 'John', 'last_name': 'Doe', 'email': 'invalid-email'}
+    response = client.post(reverse('register'), data)
+    assert response.status_code == 200
+    assert b"Enter a valid email address." in response.content
+    assert Registration.objects.count() == 0
+
+@pytest.mark.django_db
+def test_registration_duplicate_email_error_message(client):
+    Registration.objects.create(first_name='Jane', last_name='Smith', email='jane@example.com')
+    data = {'first_name': 'John', 'last_name': 'Doe', 'email': 'jane@example.com'}
+    response = client.post(reverse('register'), data)
+    assert response.status_code == 200
+    assert b"A user with this email address already exists." in response.content
