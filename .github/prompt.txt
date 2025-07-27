@@ -5,7 +5,7 @@ You must execute below tasks in order:
 1. Find out the root cause(s) of the unit test case issues
 2. Create a branch
    - Branch naming convention should follow
-   - unit-tests/<source-branch-name>-<short-commit-hash>
+     unit-tests/<source-branch-name>-<short-commit-hash>
    - determine the base branch from this {ref}
 3. Generate unit test case updates
    - Only generate for these failed files
