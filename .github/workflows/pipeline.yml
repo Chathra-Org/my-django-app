@@ -32,7 +32,8 @@ jobs:
       - name: 🧪 Run pytest
         run: |
           mkdir -p test-results
-          pytest --disable-warnings | tee test-results/pytest-results.txt 
+          pytest --disable-warnings | tee test-results/pytest-results.txt
+          exit ${PIPESTATUS[0]}
       #if failed save command output to a variable
 
       - name: 📊 Upload test results
