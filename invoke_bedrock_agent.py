@@ -7,7 +7,7 @@ def invoke_bedrock_agent(agent_id, prompt, session_id, region):
     response = client.invoke_agent(
         agentId=agent_id,
         sessionId=session_id,
-        inputText=prompt
+        inputText=prompt,
         agentAliasId=os.environ.get("AWS_BEDROCK_AGENT_ALIAS_ID", "default-alias"),
     )
     print("Agent response:")
