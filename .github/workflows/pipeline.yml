@@ -35,7 +35,6 @@ jobs:
           mkdir -p test-results
           pytest --disable-warnings | tee test-results/pytest-results.txt
           exit ${PIPESTATUS[0]}
-      #if failed save command output to a variable
 
       - name: 📊 Upload test results
         if: failure()
@@ -44,7 +43,8 @@ jobs:
           name: pytest-results
           path: test-results/
 
-      - name: 💾 Save custom prompt variable
+      #if failed invoke bedrock unit test agent
+      - name: 💾 Invoke Bedrock Agent
         if: failure() && startsWith(github.ref, 'refs/heads/feature/')
         env:
           AWS_BEDROCK_AGENT_ID: ${{ secrets.AWS_BEDROCK_AGENT_ID }}
