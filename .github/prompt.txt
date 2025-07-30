@@ -1,9 +1,10 @@
+Given feature branch is https://github.com/Chathra-Org/my-django-app/tree/feature/user-registration
 You must execute below tasks in order:
 
 1. Find out the root cause(s) of the unit test case issues
 2. Create a branch
    - Branch naming convention should follow
-     unit-tests/<source-branch-name>-<short-commit-hash>
+   - unit-tests/<source-branch-name>-<short-commit-hash>
    - determine the base branch from this {ref}
 3. Generate unit test case updates
    - Only generate for these failed files
@@ -19,3 +20,4 @@ MUST FOLLOW INSTRUCTIONS:
 - Must commit all changes to the branch before raising a PR request
 - Ensure the generated tests follow best practices for maintainability and readability.
 - Aim for meaningful coverage of all logic and edge cases introduced in the code changes.
+- Dont update the templates(html files) and only update and create files starting with test_
