@@ -20,4 +20,5 @@ MUST FOLLOW INSTRUCTIONS:
 - Must commit all changes to the branch before raising a PR request
 - Ensure the generated tests follow best practices for maintainability and readability.
 - Aim for meaningful coverage of all logic and edge cases introduced in the code changes.
+- Dont change the existing logic and only update the test cases
 - Dont update the templates(html files) and only update and create files starting with test_
